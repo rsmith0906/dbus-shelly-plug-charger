@@ -215,13 +215,12 @@ class DbusShelly1pmService:
 
                     try:
                       current = switch['current']
-                      self._dbusservice[pre + '/Current'] = current
                     except Exception as e:
                       logging.warning(f"current not available")
 
-                    self._dbusservice['/Ac/In/CurrentLimit'] = current
-                    self._dbusservice['/Ac/In/L1/P'] = power
-                    self._dbusservice['/Ac/In/L1/I'] = current
+                    self._dbusservice['/Ac/In/1/L1/V'] = voltage
+                    self._dbusservice['/Ac/In/1/L1/P'] = power
+                    self._dbusservice['/Ac/In/1/L1/I'] = current
                     self._dbusservice['/Mode'] = 1
                     self._dbusservice['/State'] = 3
           else:
@@ -294,6 +293,7 @@ def main():
       #formatting
       _kwh = lambda p, v: (str(round(v, 2)) + 'kWh')
       _state = lambda p, v: (str(v))
+      _type = lambda p, v: (str(v))
       _mode = lambda p, v: (str(v))
       _a = lambda p, v: (str(round(v, 1)) + 'A')
       _w = lambda p, v: (str(round(v, 1)) + 'W')
@@ -301,11 +301,13 @@ def main():
 
       #start our main-service
       pvac_output = DbusShelly1pmService(
-        servicename='com.victronenergy.charger',
+        servicename='com.victronenergy.multi',
         paths={
-          '/Ac/In/L1/I': {'initial': 0, 'textformat': _a},
-          '/Ac/In/L1/P': {'initial': 0, 'textformat': _w},
-          '/Ac/In/CurrentLimit': {'initial': 0, 'textformat': _a},
+          '/Ac/In/1/L1/V': {'initial': 0, 'textformat': _v},
+          '/Ac/In/1/L1/I': {'initial': 0, 'textformat': _a},
+          '/Ac/In/1/L1/P': {'initial': 0, 'textformat': _w},
+          '/Ac/In/1/CurrentLimit': {'initial': 0, 'textformat': _a},
+          '/Ac/In/1/Type': {'initial': 1, 'textformat': _type},
           '/State': {'initial': 0, 'textformat': _state},
           '/Mode': {'initial': 4, 'textformat': _mode},
         })
