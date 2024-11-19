@@ -198,7 +198,7 @@ class DbusShelly1pmService:
 
             #send data to DBus
             for phase in ['L1']:
-              pre = '/Ac/In/' + phase
+              pre = '/Ac/' + phase
 
               if phase == charger_phase:
                 result = meter_data['result']
@@ -210,12 +210,12 @@ class DbusShelly1pmService:
 
                     try:
                       current = switch['current']
-                      self._dbusservice[pre + '/I'] = current
+                      self._dbusservice[pre + '/Current'] = current
                     except Exception as e:
                       logging.warning(f"current not available")
 
-                    self._dbusservice[pre + '/V'] = voltage
-                    self._dbusservice[pre + '/P'] = power
+                    self._dbusservice[pre + '/Voltage'] = voltage
+                    self._dbusservice[pre + '/Power'] = power
           else:
             logging.warning(f"meter_data not available")
 
@@ -224,7 +224,7 @@ class DbusShelly1pmService:
       else:
         isAlive = self._isShellyAlive()
         if not isAlive:
-          self._dbusservice['/Ac/In/L1/P'] = 0
+          self._dbusservice['/Ac/Power'] = 0
 
       if updateData:
         self._signalChanges()
@@ -236,7 +236,6 @@ class DbusShelly1pmService:
     except Exception as e:
       logging.critical('Error at %s', '_update', exc_info=e)
       meter_data = None
-      # push = self.pb.push_note("Shell Plug Inverter Error", e)
     # return true, otherwise add_timeout will be removed from GObject - see docs http://library.isr.ist.utl.pt/docs/pygtk2reference/gobject-functions.html#function-gobject--timeout-add
       
     return True
@@ -294,12 +293,17 @@ def main():
 
       #start our main-service
       pvac_output = DbusShelly1pmService(
-        servicename='com.victronenergy.inverter',
+        servicename='com.victronenergy.grid',
         paths={
-          '/Ac/Out/L1/V': {'initial': 0, 'textformat': _v},
-          '/Ac/Out/L1/I': {'initial': 0, 'textformat': _a},
-          '/Ac/Out/L1/P': {'initial': 0, 'textformat': _w},
+          '/Ac/L1/Energy/Forward': {'initial': 0, 'textformat': _kwh},
+          '/Ac/L1/Power': {'initial': 0, 'textformat': _w},
+          '/Ac/Current': {'initial': 0, 'textformat': _a},
           '/Ac/Voltage': {'initial': 0, 'textformat': _v},
+          '/Ac/L1/Current': {'initial': 0, 'textformat': _a},
+          '/Ac/L1/Energy/Forward': {'initial': 0, 'textformat': _kwh},
+          '/Ac/L1/Power': {'initial': 0, 'textformat': _w},
+          '/Ac/L1/Voltage': {'initial': 0, 'textformat': _v},
+          '/Ac/Power': {'initial': 0, 'textformat': _w},
           '/State': {'initial': 0, 'textformat': _state},
           '/Mode': {'initial': 4, 'textformat': _mode},
         })
