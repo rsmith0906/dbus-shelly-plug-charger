@@ -218,9 +218,8 @@ class DbusShelly1pmService:
                     except Exception as e:
                       logging.warning(f"current not available")
 
-                    self._dbusservice['/Ac/In/1/L1/V'] = voltage
-                    self._dbusservice['/Ac/In/1/L1/P'] = power
-                    self._dbusservice['/Ac/In/1/L1/I'] = current
+                    self._dbusservice['/Ac/ActiveIn/Source'] = 1
+                    self._dbusservice['/Ac/Grid/L1/Power'] = power
                     self._dbusservice['/Mode'] = 1
                     self._dbusservice['/State'] = 3
           else:
@@ -301,13 +300,11 @@ def main():
 
       #start our main-service
       pvac_output = DbusShelly1pmService(
-        servicename='com.victronenergy.multi',
+        servicename='com.victronenergy.system',
         paths={
-          '/Ac/In/1/L1/V': {'initial': 0, 'textformat': _v},
-          '/Ac/In/1/L1/I': {'initial': 0, 'textformat': _a},
-          '/Ac/In/1/L1/P': {'initial': 0, 'textformat': _w},
-          '/Ac/In/1/CurrentLimit': {'initial': 0, 'textformat': _a},
-          '/Ac/In/1/Type': {'initial': 1, 'textformat': _type},
+          '/Ac/ActiveIn/Source': {'initial': 0, 'textformat': _type},
+          '/Ac/Grid/L1/Power': {'initial': 0, 'textformat': _w},
+          '/Ac/Grid/DeviceType': {'initial': 0, 'textformat': _w},
           '/State': {'initial': 0, 'textformat': _state},
           '/Mode': {'initial': 4, 'textformat': _mode},
         })
