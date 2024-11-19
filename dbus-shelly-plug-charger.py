@@ -222,6 +222,8 @@ class DbusShelly1pmService:
                     self._dbusservice['/Ac/In/CurrentLimit'] = current
                     self._dbusservice['/Ac/In/L1/P'] = power
                     self._dbusservice['/Ac/In/L1/I'] = current
+                    self._dbusservice['/Mode'] = 1
+                    self._dbusservice['/State'] = 3
           else:
             logging.warning(f"meter_data not available")
 
