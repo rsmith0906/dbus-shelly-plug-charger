@@ -225,7 +225,7 @@ class DbusShelly1pmService:
       else:
         isAlive = self._isShellyAlive()
         if not isAlive:
-          self._dbusservice['/Ac/Power'] = 0
+          self._dbusservice['/Ac/Grid/L1/Power'] = 0
 
       if updateData:
         self._signalChanges()
