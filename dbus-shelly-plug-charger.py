@@ -220,8 +220,8 @@ class DbusShelly1pmService:
 
                     self._dbusservice['/Ac/ActiveIn/Source'] = 1
                     self._dbusservice['/Ac/Grid/L1/Power'] = power
+                    self._dbusservice['/Ac/Consumption/NumberOfPhases'] = 1
                     self._dbusservice['/Mode'] = 1
-                    self._dbusservice['/State'] = 3
           else:
             logging.warning(f"meter_data not available")
 
@@ -291,6 +291,7 @@ def main():
 
       #formatting
       _kwh = lambda p, v: (str(round(v, 2)) + 'kWh')
+      _phases = lambda p, v: (str(v))
       _state = lambda p, v: (str(v))
       _type = lambda p, v: (str(v))
       _mode = lambda p, v: (str(v))
@@ -304,8 +305,8 @@ def main():
         paths={
           '/Ac/ActiveIn/Source': {'initial': 0, 'textformat': _type},
           '/Ac/Grid/L1/Power': {'initial': 0, 'textformat': _w},
+          '/Ac/Consumption/NumberOfPhases': {'initial': 0, 'textformat': _phases},
           '/Ac/Grid/DeviceType': {'initial': 0, 'textformat': _w},
-          '/State': {'initial': 0, 'textformat': _state},
           '/Mode': {'initial': 4, 'textformat': _mode},
         })
 
