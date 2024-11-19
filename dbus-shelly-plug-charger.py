@@ -189,6 +189,9 @@ class DbusShelly1pmService:
         self.appStarted = True
 
       isAlive = self._isShellyAlive()
+
+      logging.info(isAlive);
+
       if isAlive:
         #get data from Shelly Plug
         try:
@@ -207,6 +210,8 @@ class DbusShelly1pmService:
                   if switch:
                     power = switch['apower']
                     voltage = switch['voltage']
+
+                    logging.info(power);
 
                     try:
                       current = switch['current']
