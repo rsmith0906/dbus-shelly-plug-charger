@@ -222,9 +222,9 @@ class DbusShelly1pmService:
                     self._dbusservice[pre + '/Voltage'] = voltage
                     self._dbusservice[pre + '/Power'] = power
 
-                    self._dbusservice[pre + '/Ac/Voltage'] = voltage
-                    self._dbusservice[pre + '/Ac/Power'] = power
-                    self._dbusservice[pre + '/Ac/Current'] = current
+                    self._dbusservice['/Ac/Voltage'] = voltage
+                    self._dbusservice['/Ac/Power'] = power
+                    self._dbusservice['/Ac/Current'] = current
           else:
             logging.warning(f"meter_data not available")
 
