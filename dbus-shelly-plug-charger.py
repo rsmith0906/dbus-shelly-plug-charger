@@ -32,10 +32,8 @@ class DbusShelly1pmService:
     config = self._getConfig()
     deviceinstance = int(config['DEFAULT']['Deviceinstance'])
     customname = config['DEFAULT']['CustomName']
-    pbApiKey = config['DEFAULT']['PushBulletKey']
 
     self.appStarted = False
-    # self.pb = Pushbullet(pbApiKey)
 
     self._dbusservice = VeDbusService("{}.http_{:02d}".format(servicename, deviceinstance))
     self._paths = paths
@@ -188,8 +186,6 @@ class DbusShelly1pmService:
 
       if not self.appStarted:
         now = datetime.now()
-        now_str = now.strftime("%Y-%m-%d %H:%M:%S")
-        # push = self.pb.push_note("Shelly Plug Inverter Started", f"Started at {now_str}")
         self.appStarted = True
 
       isAlive = self._isShellyAlive()
@@ -198,13 +194,13 @@ class DbusShelly1pmService:
         try:
           meter_data = self._getShellyData()
           if meter_data:
-            inverter_phase = config['DEFAULT']['Phase']
+            charger_phase = config['DEFAULT']['Phase']
 
             #send data to DBus
             for phase in ['L1']:
-              pre = '/Ac/Out/' + phase
+              pre = '/Ac/In/' + phase
 
-              if phase == inverter_phase:
+              if phase == charger_phase:
                 result = meter_data['result']
                 if result:
                   switch = result['switch:0']
@@ -220,36 +216,15 @@ class DbusShelly1pmService:
 
                     self._dbusservice[pre + '/V'] = voltage
                     self._dbusservice[pre + '/P'] = power
-
-                    if power > 0:
-                      if power > 5:
-                        self._dbusservice['/State'] = 9
-                        # self._dbusservice['/Mode'] = 2
-                      else:
-                        self._dbusservice['/State'] = 1
-                        # self._dbusservice['/Mode'] = 5
-                    else:
-                      self._dbusservice['/State'] = 0
-                      # self._dbusservice['/Mode'] = 5
-
-              if not self._cachePower == power:
-                self.save_data("Inverter", f"{{ \"Power\": \"{power}\" }}")
-                self._cachePower = power
-              else:
-                updateData = False
           else:
             logging.warning(f"meter_data not available")
-            # push = self.pb.push_note("meter_data not available")
 
         except Exception as e:
           logging.warning('Error at %s', '_update', exc_info=e)
-          # push = self.pb.push_note("Shell Plug Inverter Warning", e)
       else:
         isAlive = self._isShellyAlive()
         if not isAlive:
-          self._dbusservice['/Ac/Out/L1/P'] = 0
-          self._dbusservice['/State'] = 0
-          # self._dbusservice['/Mode'] = 4
+          self._dbusservice['/Ac/In/L1/P'] = 0
 
       if updateData:
         self._signalChanges()
@@ -257,7 +232,7 @@ class DbusShelly1pmService:
       #update lastupdate vars
       self._lastUpdate = time.time()
 
-      inverter_phase = str(config['DEFAULT']['Phase'])
+      charger_phase = str(config['DEFAULT']['Phase'])
     except Exception as e:
       logging.critical('Error at %s', '_update', exc_info=e)
       meter_data = None
