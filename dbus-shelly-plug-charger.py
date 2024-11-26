@@ -117,7 +117,7 @@ class DbusShelly1pmService:
   def _isShellyAlive(self):
      try:
       current_directory = os.getcwd()
-      script_path = os.path.join(current_directory, "shelly-plug-alive.py")
+      script_path = os.path.join(current_directory, "shelly-plug-alive-chg.py")
 
       result = subprocess.run(
           ["python", script_path],
@@ -137,7 +137,7 @@ class DbusShelly1pmService:
   def _getShellyDeviceInfo(self):
      try:
       current_directory = os.getcwd()
-      script_path = os.path.join(current_directory, "shelly-plug-deviceInfo.py")
+      script_path = os.path.join(current_directory, "shelly-plug-deviceInfo-chg.py")
 
       result = subprocess.run(
           ["python", script_path],
@@ -157,7 +157,7 @@ class DbusShelly1pmService:
   def _getShellyData(self):
     try:
       current_directory = os.getcwd()
-      script_path = os.path.join(current_directory, "shelly-plug-data.py")
+      script_path = os.path.join(current_directory, "shelly-plug-data-chg.py")
 
       result = subprocess.run(
           ["python", script_path],
